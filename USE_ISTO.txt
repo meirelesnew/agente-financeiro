@@ -1,0 +1,122 @@
+╔══════════════════════════════════════════════════════════════╗
+║     🎉 VERSÃO FUNCIONAL 100% - COMECE AGORA!                 ║
+╚══════════════════════════════════════════════════════════════╝
+
+⚡ COMO USAR (ESCOLHA UMA):
+
+OPÇÃO 1: HTML SIMPLES (Recomendado - Funciona Garantido!)
+═══════════════════════════════════════════════════════════════
+
+1. Abra: app-simples.html
+2. Duplo clique no arquivo
+3. Seu navegador abre 
+4. ✅ Funcionando!
+
+VANTAGENS:
+✓ Funciona 100% offline
+✓ Sem servidor, sem complicação
+✓ Dados salvos no navegador (localStorage)
+✓ Abre em segundos
+✓ Funciona PC + Celular + Tablet
+
+
+OPÇÃO 2: PYTHON WEB (Se preferir servidor)
+═══════════════════════════════════════════════════════════════
+
+1. Terminal: python app_web.py
+2. Navegador: http://localhost:5000
+3. ✅ Acessa servidor
+
+
+COMO ACESSAR NO CELULAR (OPÇÃO 1):
+═══════════════════════════════════════════════════════════════
+
+1. PC: Abra app-simples.html (duplo clique)
+2. Copie o arquivo para pen drive ou compartilhe
+3. Celular: Abra app-simples.html
+4. ✅ Mesmo app, mesmo dados!
+
+COMO ACESSAR NO CELULAR (OPÇÃO 2 - Servidor):
+═══════════════════════════════════════════════════════════════
+
+1. Terminal PC: python app_web.py
+2. Celular: Abra navegador
+3. Digite: http://192.168.1.37:5000
+4. ✅ Acessa servidor Python
+
+
+╔══════════════════════════════════════════════════════════════╗
+║  🏆 RECOMENDAÇÃO: Use app-simples.html                      ║
+║     (Mais rápido, mais fácil, funciona garantido)            ║
+╚══════════════════════════════════════════════════════════════╝
+
+📁 Arquivos do Projeto:
+
+✅ app-simples.html          ← USE ISTO! (Arquivo único)
+✅ app_web.py                ← Alternativa (servidor Python)
+✅ iniciar.bat               ← Para iniciar servidor
+✅ templates/index.html      ← Interface do servidor
+✅ dados/                    ← Dados salvos (servidor)
+
+════════════════════════════════════════════════════════════════
+
+✨ FUNCIONALIDADES:
+
+[✅] Adicionar Transações (Entrada/Saída)
+[✅] Categorizar despesas
+[✅] Ver Saldo Total
+[✅] Relatório por Categoria
+[✅] Gerenciar Contratos
+[✅] Marcar Contrato como Pago
+[✅] Deletar Dados
+[✅] Limpar Tudo (com confirmação)
+[✅] Dados salvam automaticamente
+[✅] Responsivo (PC + Celular + Tablet)
+
+════════════════════════════════════════════════════════════════
+
+🚀 COMEÇAR AGORA:
+
+Opção Simples (Recomendado):
+   1. Procure por: app-simples.html
+   2. Duplo clique
+   3. Pronto! Seu app abre no navegador
+   4. Tudo funciona!
+
+Opção Servidor Python (Para múltiplos usuários):
+   1. Terminal: python app_web.py
+   2. PC: http://localhost:5000
+   3. Celular: http://192.168.1.37:5000
+
+════════════════════════════════════════════════════════════════
+
+❓ PERGUNTAS:
+
+P: Meus dados salvam?
+R: SIM! No localStorage do navegador (app-simples.html)
+   OU no servidor (app_web.py)
+
+P: Funciona no celular?
+R: SIM! Abra o arquivo .html no celular também
+   (mesmo dados se usar servidor)
+
+P: Preciso de internet?
+R: NÃO! Funciona 100% offline
+
+P: Qual é melhor?
+R: app-simples.html = Mais simples, mais rápido
+   app_web.py = Mais profissional, multi-usuário
+
+════════════════════════════════════════════════════════════════
+
+🎊 PRONTO!
+
+Você tem 2 opções funcionando:
+1. HTML simples (único arquivo)
+2. Servidor Python (completo)
+
+Escolha uma e comece a usar agora! 🚀
+
+════════════════════════════════════════════════════════════════
+
+Desenvolvido com ❤️ em Python + Flask | Fevereiro 2026
