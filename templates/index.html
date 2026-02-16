@@ -428,6 +428,7 @@
             <button class="tab active" onclick="mudarAba('transacoes')">📊 Transações</button>
             <button class="tab" onclick="mudarAba('relatorios')">📈 Relatórios</button>
             <button class="tab" onclick="mudarAba('contratos')">📋 Contratos</button>
+            <button class="tab" onclick="mudarAba('googledrive')">☁️ Google Drive</button>
         </div>
         
         <!-- ===== SEÇÃO TRANSAÇÕES ===== -->
@@ -608,6 +609,33 @@
                 </div>
             </div>
         </div>
+
+        <!-- ===== SEÇÃO GOOGLE DRIVE ===== -->
+        <div id="secao-googledrive" class="secao">
+            <div class="card">
+                <h2>☁️ Integração com Google Drive</h2>
+                <p style="color: #666; margin-bottom: 15px;">Importe seus contratos diretamente do Google Drive</p>
+                
+                <div class="msg-sucesso" id="msgSucessoGDrive"></div>
+                <div class="msg-erro" id="msgErroGDrive"></div>
+                
+                <div class="form-group">
+                    <label>ID da Pasta no Google Drive *</label>
+                    <input type="text" id="gdriveFolder" placeholder="Ex: 1a2b3c4d5e6f7g8h9i0j">
+                    <small style="color: #999;">Obtém o ID da URL: https://drive.google.com/drive/folders/<strong>ID_AQUI</strong></small>
+                </div>
+                
+                <button onclick="configurarGoogleDrive()" style="width: 100%; margin-bottom: 10px;">💾 Salvar Configuração</button>
+                <button onclick="carregarContratosGDrive()" style="width: 100%; background: #4caf50;">📥 Importar do Google Drive</button>
+            </div>
+            
+            <div class="card">
+                <h2>📋 Contratos Importados</h2>
+                <div id="listaContratosGDrive" class="lista">
+                    <div class="empty-state">Nenhum contrato importado ainda. Configure o folder ID acima.</div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script>
@@ -646,6 +674,8 @@
             } else if (aba === 'contratos') {
                 carregarContratos();
                 atualizarResumoContratos();
+            } else if (aba === 'googledrive') {
+                carregarConfigGDrive();
             } else {
                 carregarTransacoes();
             }
@@ -982,6 +1012,95 @@
             } catch (e) {
                 mostrarMensagem('erro', 'Erro ao limpar dados');
             }
+        }
+        
+        // ============ GOOGLE DRIVE ============
+        
+        async function carregarConfigGDrive() {
+            try {
+                const resp = await fetch('/api/config/drive');
+                const config = await resp.json();
+                
+                if (config.folder_id) {
+                    document.getElementById('gdriveFolder').value = config.folder_id;
+                }
+            } catch (e) {
+                console.error('Erro ao carregar config:', e);
+            }
+        }
+        
+        async function configurarGoogleDrive() {
+            const folderId = document.getElementById('gdriveFolder').value.trim();
+            
+            if (!folderId) {
+                mostrarMensagem('erro', '⚠️ Insira o ID da pasta do Google Drive');
+                return;
+            }
+            
+            try {
+                const resp = await fetch('/api/config/drive', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ folder_id: folderId })
+                });
+                
+                if (resp.ok) {
+                    mostrarMensagem('sucesso', '✅ Configuração salva com sucesso!');
+                } else {
+                    mostrarMensagem('erro', '❌ Erro ao salvar configuração');
+                }
+            } catch (e) {
+                mostrarMensagem('erro', 'Erro ao configurar Google Drive');
+            }
+        }
+        
+        async function carregarContratosGDrive() {
+            const folderId = document.getElementById('gdriveFolder').value.trim();
+            
+            if (!folderId) {
+                mostrarMensagem('erro', '⚠️ Configure o folder ID primeiro');
+                return;
+            }
+            
+            try {
+                const resp = await fetch(`/api/contratos/drive/listar?folder_id=${folderId}`);
+                const dados = await resp.json();
+                
+                if (dados.contratos && dados.contratos.length > 0) {
+                    renderizarContratosGDrive(dados.contratos);
+                    mostrarMensagem('sucesso', `✅ ${dados.count} contrato(s) importado(s)!`);
+                } else {
+                    document.getElementById('listaContratosGDrive').innerHTML = '<div class="empty-state">Nenhum contrato encontrado na pasta do Google Drive.</div>';
+                    mostrarMensagem('erro', 'Nenhum contrato encontrado');
+                }
+            } catch (e) {
+                mostrarMensagem('erro', `Erro ao importar contratos: ${e.message}`);
+            }
+        }
+        
+        function renderizarContratosGDrive(contratos) {
+            if (contratos.length === 0) {
+                document.getElementById('listaContratosGDrive').innerHTML = '<div class="empty-state">Nenhum contrato no Google Drive</div>';
+                return;
+            }
+            
+            document.getElementById('listaContratosGDrive').innerHTML = contratos.map(c => `
+                <div class="contrato ${c.status || 'pendente'}">
+                    <div class="contrato-header">
+                        <div>
+                            <div class="contrato-titulo">${c.cliente || 'Sem cliente'} - ${c.titulo || 'Sem título'}</div>
+                            <div class="contrato-valor">${formatarMoeda(c.valor || 0)}</div>
+                            <span class="status-badge status-${c.status || 'pendente'}">${c.status || 'pendente'}</span>
+                        </div>
+                    </div>
+                    <div class="alertas">
+                        <strong>Vencimento:</strong> ${new Date(c.vencimento).toLocaleDateString('pt-BR') || 'Não definido'} 
+                        ${c.whatsapp ? `| <strong>WhatsApp:</strong> ${c.whatsapp}` : ''}
+                        ${c.email ? `| <strong>Email:</strong> ${c.email}` : ''}
+                    </div>
+                    ${c.observacao ? `<div style="color: #666; margin-top: 8px;"><strong>Obs:</strong> ${c.observacao}</div>` : ''}
+                </div>
+            `).join('');
         }
         
         // ============ INICIALIZAÇÃO ============
