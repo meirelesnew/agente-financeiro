@@ -126,6 +126,12 @@ def index():
     """Página principal"""
     return render_template('index.html')
 
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """Serve arquivos estáticos (PWA)"""
+    from flask import send_from_directory
+    return send_from_directory('static', filename)
+
 # ============ API - TRANSAÇÕES ============
 
 @app.route('/api/transacoes', methods=['GET'])

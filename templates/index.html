@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agente Financeiro | Gestão Profissional</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Controle completo de finanças pessoais e empresariais. Gerencie contratos, receitas e despesas.">
+    <meta name="theme-color" content="#1a73e8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Financeiro">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💰</text></svg>">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1393,6 +1404,22 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             carregarTransacoes();
+            
+            // Registrar Service Worker para PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(registration => {
+                        console.log('✅ PWA: Service Worker registrado', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('⚠️ PWA: Erro ao registrar Service Worker', error);
+                    });
+            }
+            
+            // Detectar se app foi instalado
+            window.addEventListener('appinstalled', () => {
+                console.log('📱 App instalado com sucesso!');
+            });
         });
     </script>
     </div><!-- fecha main-wrap -->
