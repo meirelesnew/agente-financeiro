@@ -1,0 +1,12 @@
+diff --git a/requirements.txt b/requirements.txt
+index 96abd7e..b621ca4 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,7 +1,3 @@
+ flask==3.0.0
+ werkzeug==3.0.1
+-psycopg2-binary==2.9.9
+-google-api-python-client==2.100.0
+-google-auth-httplib2==0.2.0
+-google-auth-oauthlib==1.2.0
+ gunicorn==23.0.0
