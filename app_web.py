@@ -10,14 +10,6 @@ import os
 from pathlib import Path
 import io
 
-# Importações do Google Drive
-try:
-    from google.oauth2 import service_account
-    from googleapiclient.discovery import build
-    GOOGLE_DRIVE_AVAILABLE = True
-except ImportError:
-    GOOGLE_DRIVE_AVAILABLE = False
-
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
@@ -27,65 +19,6 @@ DATA_DIR.mkdir(exist_ok=True)
 
 TRANSACOES_FILE = DATA_DIR / 'transacoes.json'
 CONTRATOS_FILE = DATA_DIR / 'contratos.json'
-
-# ============ INTEGRAÇÃO GOOGLE DRIVE ============
-
-def get_drive_service():
-    """Conecta ao Google Drive usando credenciais"""
-    try:
-        # Tentar usar credenciais do ambiente Render
-        creds_json = os.environ.get('GOOGLE_CREDENTIALS_JSON')
-        if creds_json:
-            creds = service_account.Credentials.from_service_account_info(
-                json.loads(creds_json),
-                scopes=['https://www.googleapis.com/auth/drive.readonly']
-            )
-            service = build('drive', 'v3', credentials=creds)
-            return service
-    except Exception as e:
-        print(f"⚠️ Erro ao conectar ao Google Drive: {e}")
-    return None
-
-def ler_contratos_google_drive(folder_id=None):
-    """Lê contratos da pasta do Google Drive"""
-    if not GOOGLE_DRIVE_AVAILABLE or not folder_id:
-        return []
-    
-    try:
-        service = get_drive_service()
-        if not service:
-            return []
-        
-        # Listar arquivos da pasta
-        query = f"'{folder_id}' in parents and trashed=false"
-        results = service.files().list(
-            q=query,
-            spaces='drive',
-            fields='files(id, name, mimeType)',
-            pageSize=100
-        ).execute()
-        
-        files = results.get('files', [])
-        contratos = []
-        
-        for file in files:
-            # Ler arquivos JSON com contratos
-            if file['name'].endswith('.json'):
-                try:
-                    request = service.files().get_media(fileId=file['id'])
-                    content = request.execute()
-                    if isinstance(content, bytes):
-                        contract_data = json.loads(content.decode('utf-8'))
-                    else:
-                        contract_data = content
-                    contratos.append(contract_data)
-                except:
-                    pass
-        
-        return contratos
-    except Exception as e:
-        print(f"❌ Erro ao ler contratos do Drive: {e}")
-        return []
 
 # ============ FUNÇÕES DE PERSISTÊNCIA ============
 
@@ -319,53 +252,6 @@ def resumo_contratos():
         'atrasados': atrasados
     })
 
-# ============ API - GOOGLE DRIVE ============
-
-@app.route('/api/contratos/drive/listar', methods=['GET'])
-def listar_contratos_drive():
-    """Retorna contratos do Google Drive"""
-    try:
-        folder_id = request.args.get('folder_id')
-        if not folder_id:
-            return jsonify({'contratos': [], 'erro': 'folder_id não fornecido'}), 400
-        
-        contratos = ler_contratos_google_drive(folder_id)
-        return jsonify({'contratos': contratos, 'count': len(contratos)})
-    except Exception as e:
-        return jsonify({'erro': str(e)}), 500
-
-@app.route('/api/config/drive', methods=['POST'])
-def configurar_google_drive():
-    """Configura o folder ID do Google Drive"""
-    try:
-        data = request.get_json()
-        folder_id = data.get('folder_id')
-        
-        if not folder_id:
-            return jsonify({'success': False, 'erro': 'folder_id obrigatório'}), 400
-        
-        # Salvar em arquivo de configuração
-        config_file = DATA_DIR / 'config_drive.json'
-        with open(config_file, 'w') as f:
-            json.dump({'folder_id': folder_id}, f)
-        
-        return jsonify({'success': True, 'mensagem': 'Google Drive configurado com sucesso'})
-    except Exception as e:
-        return jsonify({'success': False, 'erro': str(e)}), 500
-
-@app.route('/api/config/drive', methods=['GET'])
-def obter_config_drive():
-    """Obtém configuração do Google Drive"""
-    try:
-        config_file = DATA_DIR / 'config_drive.json'
-        if config_file.exists():
-            with open(config_file, 'r') as f:
-                config = json.load(f)
-            return jsonify(config)
-        return jsonify({'folder_id': None})
-    except Exception as e:
-        return jsonify({'erro': str(e)}), 500
-
 # ============ API - BACKUP ============
 
 @app.route('/api/backup', methods=['POST'])
@@ -417,8 +303,9 @@ def limpar_todos_dados():
 # ============ INICIAR APP ============
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
     print("🚀 Agente Financeiro Web iniciado!")
-    print("📍 Acesse no PC: http://localhost:5000")
-    print("📱 Acesse no celular: http://192.168.1.37:5000")
+    print(f"📍 Acesse: http://localhost:{port}")
     print("⏹️  Pressione Ctrl+C para parar")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=debug, host='0.0.0.0', port=port)
