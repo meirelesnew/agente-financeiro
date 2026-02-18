@@ -2,7 +2,7 @@
 const CACHE_NAME = 'agente-financeiro-v1';
 const urlsToCache = [
   '/',
-  '/static/manifest.json',
+  '/manifest.json',
 ];
 
 // Instalação do Service Worker

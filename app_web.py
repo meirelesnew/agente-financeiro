@@ -61,6 +61,23 @@ def index():
     """Página principal"""
     return render_template('index.html')
 
+@app.route('/manifest.json')
+def serve_manifest():
+    """Serve manifest PWA na raiz com Content-Type correto"""
+    from flask import send_from_directory, make_response
+    response = make_response(send_from_directory('static', 'manifest.json'))
+    response.headers['Content-Type'] = 'application/manifest+json'
+    return response
+
+@app.route('/service-worker.js')
+def serve_service_worker():
+    """Serve Service Worker na raiz para escopo correto (/)"""
+    from flask import send_from_directory, make_response
+    response = make_response(send_from_directory('static', 'service-worker.js'))
+    response.headers['Content-Type'] = 'application/javascript'
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
+
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     """Serve arquivos estáticos (PWA)"""
