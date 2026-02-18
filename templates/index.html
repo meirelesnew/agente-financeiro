@@ -11,8 +11,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Financeiro">
-    <link rel="manifest" href="/static/manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>💰</text></svg>">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/icon-192.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1290,7 +1291,7 @@
             
             // Registrar Service Worker para PWA
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/static/service-worker.js')
+                navigator.serviceWorker.register('/service-worker.js', { scope: '/' })
                     .then(registration => {
                         console.log('✅ PWA: Service Worker registrado', registration.scope);
                     })
