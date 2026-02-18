@@ -1,0 +1,167 @@
+╔══════════════════════════════════════════════════════════════╗
+║  ✅ TUDO PRONTO PARA RODAR 24/7                             ║
+║     Escolha uma das 3 opções abaixo                         ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 VOCÊ TEM 3 OPÇÕES AGORA:
+
+════════════════════════════════════════════════════════════════
+
+[OPÇÃO 1] 🏆 RECOMENDADA - Task Scheduler (Automático)
+──────────────────────────────────────────────────────
+
+✅ Duplo clique em: agendar-autostart.bat
+✅ Escolha "Executar como administrador"
+✅ Pronto! Tarefa criada
+
+Resultado:
+   • Próximo boot = servidor inicia automaticamente
+   • Roda 24/7 em background
+   • Sem janela visível
+   • Acesse: http://localhost:5000
+
+Tempo: 2 minutos
+
+
+[OPÇÃO 2] 🔧 Serviço Windows (Profissional)
+──────────────────────────────────────────────────────
+
+Pré-requisito: Instalar NSSM (grátis)
+   • Baixe em: https://nssm.cc/download
+   • Extraia em: c:\nssm\
+
+Depois:
+   ✅ Duplo clique em: agendar-servico.bat
+   ✅ Escolha opção [1]
+   ✅ Pronto!
+
+Resultado:
+   • Serviço Windows profissional
+   • Auto-restart se travar
+   • Melhor monitoramento
+   • Acesse: http://localhost:5000
+
+Tempo: 5 minutos (com instalação NSSM)
+
+
+[OPÇÃO 3] 📊 Monitor com Auto-Restart
+──────────────────────────────────────────────────────
+
+✅ Duplo clique em: iniciar-monitor.bat
+✅ Servidor inicia
+✅ Monitor fica verificando a cada 60 segundos
+✅ Se travar, reinicia automaticamente
+
+Resultado:
+   • Servidor sempre rodando
+   • Se travar, volta sozinho
+   • Log com histórico
+   • Terminal fica aberto
+
+Tempo: Instantâneo
+
+Arquivo de log: servidor-monitor.log
+   (Mostra histórico de tudo)
+
+
+════════════════════════════════════════════════════════════════
+
+🚀 COMEÇAR AGORA (Recomendado):
+
+1. Clique direito em: agendar-autostart.bat
+2. "Executar como administrador"
+3. Aguarde a mensagem de sucesso
+4. Feche e pronto! ✅
+
+Seu servidor agora:
+   ✅ Inicia automaticamente no boot
+   ✅ Roda 24/7
+   ✅ Acessível em http://localhost:5000
+   ✅ Celular em http://192.168.1.37:5000
+
+════════════════════════════════════════════════════════════════
+
+📋 ARQUIVOS DISPONÍVEIS:
+
+✅ agendar-autostart.bat       ← USE ISTO!
+✅ agendar-servico.bat         ← Alternativa profissional
+✅ iniciar-monitor.bat         ← Com monitoramento
+✅ monitor-servidor.py         ← Script Python do monitor
+✅ RODAR_24-7.txt              ← Documentação completa
+
+════════════════════════════════════════════════════════════════
+
+✨ VERIFICAR SE ESTÁ RODANDO:
+
+[Método 1] Navegador
+   • Abra: http://localhost:5000
+   • Se carregar = ✅ Rodando!
+
+[Método 2] Task Manager
+   • Ctrl+Shift+Esc
+   • Procure por: python.exe
+   • Se tiver = ✅ Rodando!
+
+[Método 3] PowerShell
+   • Execute: netstat -ano | findstr 5000
+   • Se mostrar conexão = ✅ Rodando!
+
+════════════════════════════════════════════════════════════════
+
+🛑 PARAR SERVIDOR:
+
+[Se Opção 1 (Task Scheduler)]
+   1. Abra: Agendador de Tarefas
+   2. Procure: "AgenteFinanceiro"
+   3. Clique direito → Desabilitar
+
+[Se Opção 2 (Serviço)]
+   • Terminal: net stop AgenteFinanceiro
+
+[Se Opção 3 (Monitor)]
+   • Feche a janela do monitor
+   • Ou pressione: Ctrl+C
+
+════════════════════════════════════════════════════════════════
+
+💡 DICAS IMPORTANTES:
+
+1. DADOS SALVOS
+   • Em: c:\Users\meire\agente-financeiro\dados\
+   • Enquanto servidor está rodando
+   • Sempre persistindo
+
+2. ACESSO REMOTO
+   • PC: http://localhost:5000
+   • Celular: http://192.168.1.37:5000
+   • Qualquer PC na rede: http://192.168.1.37:5000
+
+3. MÚLTIPLAS INSTÂNCIAS
+   • Não rode 2 servidores na mesma porta (5000)
+   • Se precisar: python app_web.py --port 5001
+
+4. LOGS
+   • Se usar monitor, veja: servidor-monitor.log
+   • Mostra histórico de tudo que aconteceu
+
+5. REINICIAR PC
+   • Com Opção 1 ou 2 = servidor inicia automaticamente
+   • Com Opção 3 = precisa rodar manualmente
+
+════════════════════════════════════════════════════════════════
+
+🎊 ESCOLHA E COMECE!
+
+Recomendação geral:
+   👉 Opção 1 (Task Scheduler) = Melhor relação custo/benefício
+
+Comande agora:
+   1. Clique direito em: agendar-autostart.bat
+   2. "Executar como administrador"
+   3. Pronto! Está feito! ✅
+
+════════════════════════════════════════════════════════════════
+
+Desenvolvido com ❤️ em Python + Flask | Fevereiro 2026
+
+Seu app agora roda 24/7 sem parar! 🚀

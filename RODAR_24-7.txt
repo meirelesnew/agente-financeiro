@@ -1,0 +1,185 @@
+╔══════════════════════════════════════════════════════════════╗
+║     🚀 DEIXAR RODANDO 24/7 - GUIA COMPLETO                   ║
+║        Seu app nunca vai parar!                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+3 OPÇÕES PARA DEIXAR RODANDO 24/7:
+
+════════════════════════════════════════════════════════════════
+
+OPÇÃO 1: TASK SCHEDULER (RECOMENDADO) ⭐
+═══════════════════════════════════════════════════════════════
+
+✅ Vantagens:
+   • Nativo do Windows
+   • Iniciar no boot automático
+   • Rodar como usuário específico
+   • Fácil de configurar
+   • Não precisa instalar nada
+
+❌ Limitações:
+   • Sem interface visível
+   • Difícil debug
+
+Como Configurar:
+
+[1] Clique direito em: agendar-autostart.bat
+[2] "Executar como administrador"
+[3] Pronto! Tarefa criada
+
+O que acontece:
+   • Próximo boot = servidor inicia automaticamente
+   • Rodar 24/7 em background
+   • Acessível em http://localhost:5000
+
+Para Verificar:
+   • Abra: Agendador de Tarefas (Task Scheduler)
+   • Procure por: "AgenteFinanceiro"
+   • Deve estar na lista
+
+Para Parar:
+   1. Task Scheduler
+   2. Clique direito em "AgenteFinanceiro"
+   3. "Desabilitar" ou "Excluir"
+
+════════════════════════════════════════════════════════════════
+
+OPÇÃO 2: SERVIÇO WINDOWS (MAIS PROFISSIONAL)
+═══════════════════════════════════════════════════════════════
+
+✅ Vantagens:
+   • Rodas como serviço do sistema
+   • Auto-reinício se travar
+   • Melhor performance
+   • Monitoramento profissional
+
+❌ Limitações:
+   • Precisa instalar NSSM (grátis)
+   • Mais complexo
+
+Como Fazer:
+
+[1] Baixe NSSM: https://nssm.cc/download
+[2] Extraia em: c:\nssm\
+[3] Clique em: agendar-servico.bat
+[4] Escolha opção [1]
+[5] Pronto!
+
+Comandos Úteis:
+   • Iniciar:  net start AgenteFinanceiro
+   • Parar:    net stop AgenteFinanceiro
+   • Status:   sc query AgenteFinanceiro
+   • Remover:  sc delete AgenteFinanceiro
+
+════════════════════════════════════════════════════════════════
+
+OPÇÃO 3: BACKGROUND COM PYTHONW (SIMPLES)
+═══════════════════════════════════════════════════════════════
+
+✅ Vantagens:
+   • Muito simples
+   • Sem instalação extra
+   • Funciona já
+   • Compatível com HTML simples
+
+❌ Limitações:
+   • Não inicia no boot automaticamente
+   • Precisa executar manualmente
+   • Se PC reiniciar, para
+
+Como Fazer:
+
+[1] Duplo clique: agendar-servico.bat
+[2] Escolha opção [3]
+[3] Servidor inicia em background
+
+Resultado:
+   • Terminal fecha mas servidor continua rodando
+   • Acessível em http://localhost:5000
+   • Até fechar o navegador ou desligar PC
+
+════════════════════════════════════════════════════════════════
+
+COMPARAÇÃO DAS 3 OPÇÕES:
+
+┌─────────────────┬──────────┬──────────┬──────────┐
+│ Característica  │ Opção 1  │ Opção 2  │ Opção 3  │
+├─────────────────┼──────────┼──────────┼──────────┤
+│ Auto-boot       │ ✅ SIM   │ ✅ SIM   │ ❌ NÃO   │
+│ 24/7            │ ✅ SIM   │ ✅ SIM   │ ⚠️ ATÉ   │
+│ Fácil setup     │ ✅ SIM   │ ❌ NÃO   │ ✅ SIM   │
+│ Auto-restart    │ ❌ NÃO   │ ✅ SIM   │ ❌ NÃO   │
+│ Instalar extra  │ ❌ NÃO   │ ✅ NSSM  │ ❌ NÃO   │
+│ Profissional    │ ⚠️ BOM   │ ✅ ÓTIMO │ ⚠️ BOM   │
+└─────────────────┴──────────┴──────────┴──────────┘
+
+RECOMENDAÇÃO: Opção 1 (Task Scheduler) = Melhor custo/benefício
+
+════════════════════════════════════════════════════════════════
+
+SOLUÇÃO RÁPIDA (30 SEGUNDOS):
+
+1. Clique direito em: agendar-autostart.bat
+2. "Executar como administrador"
+3. Pronto! Está agendado
+4. Próximo boot = servidor automático
+
+════════════════════════════════════════════════════════════════
+
+VERIFICAR SE ESTÁ RODANDO:
+
+[1] Abra navegador
+[2] Digite: http://localhost:5000
+[3] Se carregar = ✅ Rodando!
+
+[OU]
+
+[1] Ctrl+Shift+Esc (Task Manager)
+[2] Abas: "Detalhes"
+[3] Procure por: python.exe
+[4] Se tiver = ✅ Rodando!
+
+════════════════════════════════════════════════════════════════
+
+PARAR DE RODAR:
+
+Opção 1 (Task Scheduler):
+   • Abra: Agendador de Tarefas
+   • Procure: "AgenteFinanceiro"
+   • Clique direito → Desabilitar
+
+Opção 2 (Serviço):
+   • Terminal: net stop AgenteFinanceiro
+
+Opção 3 (Background):
+   • Task Manager → Encontre python.exe
+   • Clique direito → Encerrar tarefa
+
+════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE:
+
+• Se tiver múltiplos servidores rodando (app_web.py + servidor-simples)
+  eles podem conflitar na porta 5000
+
+• Para usar porta diferente:
+  python app_web.py --port 5001
+
+• Celular continua acessando:
+  http://192.168.1.37:5001
+
+════════════════════════════════════════════════════════════════
+
+🎊 PRONTO!
+
+Seu app agora roda 24/7 sem você fazer nada!
+
+Benefícios:
+✅ Sempre disponível
+✅ Acessível de qualquer lugar
+✅ Sem precisar lembrar de iniciar
+✅ Compartilhe URL com amigos/família
+
+════════════════════════════════════════════════════════════════
+
+Desenvolvido com ❤️ em Python + Flask | Fevereiro 2026
