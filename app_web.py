@@ -9,6 +9,8 @@ import json
 import os
 from pathlib import Path
 import io
+import requests
+from collections import Counter
 
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
@@ -58,6 +60,12 @@ def salvar_contratos(contratos):
 def index():
     """Página principal"""
     return render_template('index.html')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    """Serve arquivos estáticos (PWA)"""
+    from flask import send_from_directory
+    return send_from_directory('static', filename)
 
 # ============ API - TRANSAÇÕES ============
 
@@ -300,15 +308,197 @@ def limpar_todos_dados():
     except Exception as e:
         return jsonify({'success': False, 'erro': str(e)}), 400
 
+# ============ API - ASSISTENTE IA ============
+
+def analisar_dados_usuario():
+    """Analisa os dados financeiros do usuário para contexto da IA"""
+    try:
+        transacoes = carregar_transacoes()
+        contratos = carregar_contratos()
+        
+        # Calcular totais
+        entradas = sum(t['valor'] for t in transacoes if t['tipo'] == 'entrada')
+        saidas = sum(t['valor'] for t in transacoes if t['tipo'] == 'saida')
+        saldo = entradas - saidas
+        
+        # Top categorias
+        categorias_gastos = [t['categoria'] for t in transacoes if t['tipo'] == 'saida']
+        top_categorias = Counter(categorias_gastos).most_common(3)
+        
+        # Contratos pendentes
+        contratos_pendentes = len([c for c in contratos if c['status'] == 'pendente'])
+        valor_pendente = sum(c['valor'] for c in contratos if c['status'] == 'pendente')
+        
+        return {
+            'total_receitas': entradas,
+            'total_despesas': saidas,
+            'saldo': saldo,
+            'num_transacoes': len(transacoes),
+            'top_categorias': top_categorias,
+            'contratos_pendentes': contratos_pendentes,
+            'valor_contratos_pendentes': valor_pendente
+        }
+    except:
+        return None
+
+def chamar_ia_groq(mensagem, contexto):
+    """Chama API da Groq (gratuito e rápido)"""
+    api_key = os.getenv('GROQ_API_KEY')
+    if not api_key:
+        return None
+    
+    try:
+        response = requests.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            headers={
+                'Authorization': f'Bearer {api_key}',
+                'Content-Type': 'application/json'
+            },
+            json={
+                'model': 'llama-3.1-8b-instant',
+                'messages': [
+                    {'role': 'system', 'content': contexto},
+                    {'role': 'user', 'content': mensagem}
+                ],
+                'max_tokens': 500,
+                'temperature': 0.7
+            },
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            return response.json()['choices'][0]['message']['content']
+    except:
+        pass
+    return None
+
+def chamar_ia_gemini(mensagem, contexto):
+    """Chama API do Google Gemini (gratuito)"""
+    api_key = os.getenv('GEMINI_API_KEY')
+    if not api_key:
+        return None
+    
+    try:
+        response = requests.post(
+            f'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={api_key}',
+            headers={'Content-Type': 'application/json'},
+            json={
+                'contents': [{
+                    'parts': [{
+                        'text': f"{contexto}\n\nUsuário: {mensagem}"
+                    }]
+                }],
+                'generationConfig': {
+                    'temperature': 0.7,
+                    'maxOutputTokens': 500
+                }
+            },
+            timeout=30
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            return data['candidates'][0]['content']['parts'][0]['text']
+    except:
+        pass
+    return None
+
+def resposta_demo(mensagem):
+    """Respostas demo quando não há API configurada"""
+    mensagem_lower = mensagem.lower()
+    
+    if any(palavra in mensagem_lower for palavra in ['olá', 'oi', 'bom dia', 'boa tarde', 'boa noite', 'hello']):
+        return "Olá! 👋 Sou seu assistente financeiro! Posso ajudá-lo com dicas sobre economia, orçamento e gestão de finanças. Como posso ajudar hoje?"
+    
+    elif any(palavra in mensagem_lower for palavra in ['economizar', 'poupar', 'guardar dinheiro']):
+        return "💰 **Dicas para Economizar:**\n\n1. Registre TODOS os gastos (até os pequenos)\n2. Estabeleça um orçamento mensal\n3. Use a regra 50-30-20: 50% necessidades, 30% desejos, 20% poupança\n4. Corte gastos supérfluos\n5. Compare preços antes de comprar\n\nLembre-se: pequenas economias somam muito no final do mês!"
+    
+    elif any(palavra in mensagem_lower for palavra in ['categoria', 'categorias', 'organizar']):
+        return "📊 **Sobre Categorias:**\n\n**Receitas:**\n- Salário: renda fixa mensal\n- Projetos: trabalhos freelance\n- Serviços: prestação de serviços\n\n**Despesas:**\n- Alimentação: mercado, restaurantes\n- Transporte: combustível, passagens\n- Moradia: aluguel, contas\n- Lazer: entretenimento\n- Saúde: medicamentos, consultas\n\nOrganizar por categorias ajuda a identificar onde você gasta mais!"
+    
+    elif any(palavra in mensagem_lower for palavra in ['orçamento', 'planejamento', 'planejar']):
+        return "📝 **Como Fazer um Orçamento:**\n\n1. Liste todas as receitas mensais\n2. Liste todas as despesas fixas\n3. Estime despesas variáveis\n4. Defina metas de economia\n5. Acompanhe diariamente\n6. Ajuste quando necessário\n\nUse este app para registrar tudo e visualizar seu progresso!"
+    
+    elif any(palavra in mensagem_lower for palavra in ['dívida', 'divida', 'endividado', 'devo']):
+        return "💳 **Sair das Dívidas:**\n\n1. Liste todas as dívidas com juros\n2. Priorize as com maior juros\n3. Negocie prazos e descontos\n4. Corte gastos não essenciais\n5. Use método bola de neve ou avalanche\n6. Não faça novas dívidas\n\nPersistência é a chave! Você consegue! 💪"
+    
+    elif any(palavra in mensagem_lower for palavra in ['obrigado', 'obrigada', 'valeu', 'thanks']):
+        return "De nada! 😊 Estou aqui para ajudar sempre que precisar. Boa gestão financeira!"
+    
+    else:
+        return "🤖 **Posso ajudar com:**\n\n• Dicas de economia e poupança\n• Como fazer orçamento\n• Organização por categorias\n• Gestão de dívidas\n• Planejamento financeiro\n\n*Nota: Para análises personalizadas dos seus dados, configure uma API de IA (Groq ou Gemini são gratuitas!)*\n\nFaça uma pergunta específica!"
+
+@app.route('/api/chat', methods=['POST'])
+def chat_ia():
+    """Endpoint para chat com assistente IA"""
+    try:
+        data = request.get_json()
+        mensagem = data.get('mensagem', '').strip()
+        
+        if not mensagem or len(mensagem) > 500:
+            return jsonify({
+                'success': False,
+                'erro': 'Mensagem inválida ou muito longa (máx 500 caracteres)'
+            }), 400
+        
+        # Analisar dados do usuário
+        dados_usuario = analisar_dados_usuario()
+        
+        # Criar contexto para a IA
+        if dados_usuario:
+            contexto = f"""Você é um assistente financeiro pessoal amigável e profissional. 
+
+Dados do usuário:
+- Receitas totais: R$ {dados_usuario['total_receitas']:.2f}
+- Despesas totais: R$ {dados_usuario['total_despesas']:.2f}
+- Saldo atual: R$ {dados_usuario['saldo']:.2f}
+- Total de transações: {dados_usuario['num_transacoes']}
+- Contratos pendentes: {dados_usuario['contratos_pendentes']} (R$ {dados_usuario['valor_contratos_pendentes']:.2f})
+
+Forneça conselhos práticos, educativos e encorajadores sobre gestão financeira. 
+Seja breve (máx 300 palavras), use emojis moderadamente e mantenha tom profissional mas acessível."""
+        else:
+            contexto = """Você é um assistente financeiro pessoal amigável e profissional.
+Forneça conselhos práticos sobre gestão financeira, orçamento e economia.
+Seja breve (máx 300 palavras), use emojis moderadamente e mantenha tom profissional mas acessível."""
+        
+        # Tentar APIs de IA (em ordem de preferência)
+        resposta = None
+        provedor = 'demo'
+        
+        # 1. Tentar Groq (rápido e gratuito)
+        resposta = chamar_ia_groq(mensagem, contexto)
+        if resposta:
+            provedor = 'groq'
+        
+        # 2. Tentar Gemini (gratuito)
+        if not resposta:
+            resposta = chamar_ia_gemini(mensagem, contexto)
+            if resposta:
+                provedor = 'gemini'
+        
+        # 3. Fallback para respostas demo
+        if not resposta:
+            resposta = resposta_demo(mensagem)
+        
+        return jsonify({
+            'success': True,
+            'resposta': resposta,
+            'provedor': provedor,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'erro': str(e)
+        }), 500
+
 # ============ INICIAR APP ============
 
 if __name__ == '__main__':
-    try:
-        port = int(os.environ.get('PORT', 5000))
-    except ValueError:
-        port = 5000
-    debug = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
     print("🚀 Agente Financeiro Web iniciado!")
-    print(f"📍 Acesse: http://localhost:{port}")
+    print("📍 Acesse no PC: http://localhost:5000")
+    print("📱 Acesse no celular: http://192.168.1.37:5000")
     print("⏹️  Pressione Ctrl+C para parar")
-    app.run(debug=debug, host='0.0.0.0', port=port)
+    app.run(debug=True, host='0.0.0.0', port=5000)

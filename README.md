@@ -1,50 +1,79 @@
-# Welcome to your Expo app 👋
+# 💰 Agente Financeiro
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Sistema completo de controle financeiro com Assistente de IA integrado.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- 📊 **Gestão de Transações** - Controle de receitas e despesas
+- 📈 **Relatórios** - Visualização de dados financeiros
+- 📋 **Contratos** - Gestão de contratos e pagamentos
+- 🤖 **Assistente de IA** - Chat inteligente para orientação financeira
+- 💡 **Sistema de Ajuda** - Tutorial e FAQ integrados
+- 📱 **PWA** - Instalável no celular como app nativo
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Tecnologias
 
-2. Start the app
+- **Backend:** Python + Flask
+- **Frontend:** HTML5 + JavaScript (Vanilla)
+- **IA:** Groq, Google Gemini, modo demo
+- **Deploy:** Render.com (gratuito)
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## 📦 Instalação Local
 
 ```bash
-npm run reset-project
+# Clone o repositório
+git clone https://github.com/meirelesnew/agente-financeiro.git
+cd agente-financeiro
+
+# Instale dependências
+pip install -r requirements.txt
+
+# Execute o servidor
+python app_web.py
+
+# Acesse
+http://localhost:5000
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🌐 Deploy no Render
 
-## Learn more
+1. Fork este repositório
+2. Crie conta no [Render.com](https://render.com)
+3. Conecte seu repositório GitHub
+4. Deploy automático! ✅
 
-To learn more about developing your project with Expo, look at the following resources:
+## 🤖 Configurar IA (Opcional)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+O app funciona sem configuração, mas para usar IA real:
 
-## Join the community
+### Groq (Gratuito)
+```bash
+export GROQ_API_KEY="sua_chave_aqui"
+```
+Obtenha em: https://console.groq.com
 
-Join our community of developers creating universal apps.
+### Google Gemini (Gratuito)
+```bash
+export GEMINI_API_KEY="sua_chave_aqui"
+```
+Obtenha em: https://ai.google.dev
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## 📱 Instalar como App
+
+### Android
+1. Abra no Chrome
+2. Menu → "Adicionar à tela inicial"
+
+### iPhone
+1. Abra no Safari
+2. Compartilhar → "Adicionar à Tela de Início"
+
+## 📄 Licença
+
+MIT License - Use como quiser!
+
+## 🎉 Pronto!
+
+Acesse: https://agente-financeiro.onrender.com/
+
+Desenvolvido com ❤️ para ajudar no controle financeiro

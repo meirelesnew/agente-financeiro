@@ -1,0 +1,34 @@
+{
+  "name": "Agente Financeiro",
+  "short_name": "Financeiro",
+  "description": "Controle completo de finanças pessoais e empresariais",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a73e8",
+  "theme_color": "#1a73e8",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/static/icon-192.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["finance", "productivity", "business"],
+  "shortcuts": [
+    {
+      "name": "Nova Transação",
+      "short_name": "Nova",
+      "url": "/?acao=nova",
+      "description": "Adicionar nova transação"
+    },
+    {
+      "name": "Ver Contratos",
+      "short_name": "Contratos",
+      "url": "/?acao=contratos",
+      "description": "Gerenciar contratos"
+    }
+  ]
+}
